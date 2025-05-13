@@ -2,5 +2,11 @@
 name = "records-in-rust"
 version = "0.1.0"
 edition = "2024"
+authors = ["Jon Wolski <jonwolski@gmail.com>"]
+
+build = "build.rs"
 
 [dependencies]
+
+[build-dependencies]
+tango = "0.8.3"
