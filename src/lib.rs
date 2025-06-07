@@ -110,11 +110,11 @@ fn get_accumulated_record(record: Record) -> Record {
 
 //@ ## Testing the approaches
 //@
-//@ Now that I have a couple different ways of writing thes functions—an
+//@ Now that I have a couple different ways of writing these functions—an
 //@ imperative style and a functional style—I will write some client code to call
 //@ these functions, and then compare their assembly code.
 //@
-//@ ### Methedology
+//@ ### Methodology
 //@
 //@ A debug build will result in very different compilation for these functions,
 //@ but I am interested in whether or not Rust can 'magically' optimize away my
@@ -196,14 +196,14 @@ pub fn update_record_with_refs(record: &mut Record) {
 //@ create a copy of the data or optimize by mutating-in-place. I will
 //@
 //@ I can't just create a record and pass it in to the functions under test,
-//@ becuase the optimizer will eliminate the code. I need to leave something open-ended for _run-time_; it needs to be an _input_ to my library.
+//@ because the optimizer will eliminate the code. I need to leave something open-ended for _run-time_; it needs to be an _input_ to my library.
 //@
 //@ However, if I want to give the compiler the opportunity to optimize this "copy"
 //@ as an in-place mutation, I need mutable memory.
 //@
 //@ Since I'm testing the immutable-style functions, I will allow my _client_
 //@ functions (those functions _executing the test_) to receive a mutable
-//@ reference. My functions _under test_ will still recieve immutable structs and
+//@ reference. My functions _under test_ will still receive immutable structs and
 //@ return copies.
 
 /// immutable record, functional style
@@ -214,7 +214,7 @@ pub fn update_record_with_ptrs(record: &mut Record) {
     *record = get_accumulated_record(*record);
 }
 
-//@ … and the cooresponding assembly:
+//@ … and the corresponding assembly:
 //@
 //@ ```asm
 //@ __ZN15records_in_rust23update_record_with_ptrs17hc5c1df94ab26400bE:
@@ -229,7 +229,7 @@ pub fn update_record_with_ptrs(record: &mut Record) {
 //@ 	ret
 //@ 	.cfi_endproc
 //@ ```
-//@ Whadya know? It's nearly identical code! the `strb` is moved to the end,
+//@ Whadya know? It's nearly identical code! The `strb` is moved to the end,
 //@ but that does not make much difference.
 //@
 //@ Okay, but I would never write functional code that way. When I'm "functional
@@ -264,10 +264,10 @@ pub fn update_record_with_minimal_vars(record: &mut Record) {
 //@ 	.cfi_endproc
 //@ ```
 //@
-//@ Again the same aseembly in a slightly different order.
+//@ Again the same assembly in a slightly different order.
 //@
 //@ Still, this is kind of ugly. What happens if I save the intermediate values to
-//@ a tmp var. I'll re-use the same var name, _shadowing_ the previous ver each
+//@ a temp var. I'll re-use the same var name, _shadowing_ the previous var each
 //@ time.
 
 /// minimize use of pointers with shadowed tmp vars
@@ -309,7 +309,7 @@ pub fn update_record_with_shadowed_vars(record: &mut Record) {
 //@
 //@ ...
 //@
-//@ Well, on to the next thing. What happens if I re-use a tmp var instead of
+//@ Well, on to the next thing. What happens if I re-use a temp var instead of
 //@ shadowing the previous var?
 
 
@@ -342,7 +342,7 @@ pub fn update_record_with_mut_tmp_var(record: &mut Record) {
 //@
 //@ ### Can I do this with no refs?
 //@
-//@ At this point, it dawns on me my _test_ code could recieve a `Record` rather
+//@ At this point, it dawns on me my _test_ code could receive a `Record` rather
 //@ a reference to one. This _moves_ the struct into our function (rather than a
 //@ _borrowing_ the struct).
 //@
@@ -360,7 +360,7 @@ pub fn update_record_no_refs(record: Record) -> Record {
     record
 }
 
-//@ compile ...
+//@ Compile ...
 //@
 //@ ```asm
 //@ __ZN15records_in_rust21update_record_no_refs17h6f48abe941590117E:
@@ -379,7 +379,7 @@ pub fn update_record_no_refs(record: Record) -> Record {
 //@ Same as the earlier code, but we're back to using `XOR` (`eor`) to toggle
 //@ the Boolean.
 //@
-//@ Finally, let's see what happens when my test code recieves a `Record` and
+//@ Finally, let's see what happens when my test code receives a `Record` and
 //@ returns a new `Record`, but I call the mutating/imperative functions.
 
 #[inline(never)]
@@ -416,7 +416,7 @@ pub fn update_record_mut(record: Record) -> Record {
 //@
 //@ Also, this loading is weird because my struct is represented in 9 bytes. It doesn't align well to "word boundaries."
 //@
-//@ This is why we see `ldurh w12, [x0, #9]` ("load half-word starting at byte 9 into register w12").
+//@ This is why we see `ldurh w12, [x0, #9]` ("load half-word starting at byte 9 into register `w12`").
 //@
 //@ We see loads from `x0`, but stores to `x8` indicating we are reading from one
 //@ struct and writing to a second.
@@ -453,5 +453,5 @@ pub fn update_mut_record_mut(mut record: Record) -> Record {
 //@ <sup>1</sup>Technically, it may be _LLVM_ that enables this, but I think the Rust compiler
 //@ team would have to do at least _some_ work to take advantage of it.
 //@
-//@ Also, when I say "zero cost," I mean "run-time perforance cost." That is, writing in a functional style will not result in more memory usage or CPU cycles than writing in a more imperative, mutable style.
+//@ Also, when I say "zero cost," I mean "run-time performance cost." That is, writing in a functional style will not result in more memory usage or CPU cycles than writing in a more imperative, mutable style.
 //@ </footer>
