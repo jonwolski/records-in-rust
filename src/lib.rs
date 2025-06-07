@@ -435,7 +435,24 @@ pub fn update_mut_record_mut(mut record: Record) -> Record {
 //@
 //@ ```asm
 //@
+//@ __ZN15records_in_rust21update_mut_record_mut17h40a89b93d70ddfc7E:
+//@ 	.cfi_startproc
+//@ 	ldrb	w9, [x0, #8]
+//@ 	eor	w9, w9, #0x1
+//@ 	strb	w9, [x0, #8]
+//@ 	ldp	w9, w10, [x0]
+//@ 	add	w9, w9, w10
+//@ 	add	w9, w9, #1
+//@ 	stp	w9, w9, [x0]
+//@ 	ldr	w9, [x0, #8]
+//@ 	str	w9, [x8, #8]
+//@ 	ldr	x9, [x0]
+//@ 	str	x9, [x8]
+//@ 	ret
+//@ 	.cfi_endproc
 //@ ```
+//@
+//@ Different, but not significantly so.
 //@
 //@ ## Conclusion
 //@
