@@ -478,7 +478,7 @@ Ironically, the one case where Rust still produced a _copy_ of the original stru
 [1]: #1
 <footer id="1">
 
-Technically, it may be _LLVM_ that enables this, but I think the Rust compiler
+<sup>1</sup>Technically, it may be _LLVM_ that enables this, but I think the Rust compiler
 team would have to do at least _some_ work to take advantage of it.
 
 Also, when I say "zero cost," I mean "run-time perforance cost." That is, writing in a functional style will not result in more memory usage or CPU cycles than writing in a more imperative, mutable style.
