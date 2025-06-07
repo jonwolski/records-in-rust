@@ -376,8 +376,11 @@ pub fn update_record_no_refs(record: Record) -> Record {
 //@ 	.cfi_endproc
 //@ ```
 //@
-//@ Same as the earlier code, but we're back to using `XOR` (`eor`) to toggle
-//@ the Boolean.
+//@ Whoa! For the first time, **a second struct is created!**
+//@
+//@ Similar to the earlier code, but we're back to using `XOR` (`eor`) to toggle
+//@ the Boolean. **Significantly**, we now have writes to `x8` instead of `x0`.
+//@ That is, the code is now writing to a _second_ `Record`.
 //@
 //@ Finally, let's see what happens when my test code receives a `Record` and
 //@ returns a new `Record`, but I call the mutating/imperative functions.
@@ -412,7 +415,7 @@ pub fn update_record_mut(record: Record) -> Record {
 //@ 	.cfi_endproc
 //@ ```
 //@
-//@ Whoa! For the first time, **a second struct is created!**
+//@ Again, this creates a second struct.
 //@
 //@ Also, this loading is weird because my struct is represented in 9 bytes. It doesn't align well to "word boundaries."
 //@
@@ -434,7 +437,6 @@ pub fn update_mut_record_mut(mut record: Record) -> Record {
 //@ …
 //@
 //@ ```asm
-//@
 //@ __ZN15records_in_rust21update_mut_record_mut17h40a89b93d70ddfc7E:
 //@ 	.cfi_startproc
 //@ 	ldrb	w9, [x0, #8]
@@ -452,17 +454,30 @@ pub fn update_mut_record_mut(mut record: Record) -> Record {
 //@ 	.cfi_endproc
 //@ ```
 //@
-//@ Different, but not significantly so.
+//@ Well, that _is_ different. Again, unexpected.
+//@
+//@ Without the re-binding, the mutations are done in-place, but the results are
+//@ still copied to a new struct.
 //@
 //@ ## Conclusion
 //@
 //@ Rust (or LLVM) is able to optimize what appears to be "copy-construction" into
 //@ update-in-place when a function _consumes_ a struct and returns a copy of that struct, even with some modifications to the original struct.
 //@
-//@ Ironically, the one case where Rust still produced a _copy_ of the original struct was when I had to do a mutable re-binding.
+//@ Regardless of imperative or functional style, the only place where Rust did
+//@ **not** eliminate the extra copy was in my test scaffolding with
+//@ `#[inline(never)]`.
+//@
+//@ The functional programming abstractions are truly zero-cost.
+//@
+//@ As with anything performance-related, verify with benchmarks and don't optimize
+//@ prematurely.
+//@
+//@ Happy coding!
 //@
 //@ ---
 //@
+//@ ### Footnotes
 //@
 //@ [1]: #1
 //@ <footer id="1">
