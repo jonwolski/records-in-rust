@@ -207,7 +207,7 @@ Now to call the non-mutating functions that _appear_ to create copies of the
 data.
 
 Immediately, I run into a dilemma. I want to test whether these functions will
-create a copy of the data or optimize by mutating-in-place. I will
+create a copy of the data or optimize by mutating-in-place.
 
 I can't just create a record and pass it in to the functions under test,
 because the optimizer will eliminate the code. I need to leave something open-ended for _run-time_; it needs to be an _input_ to my library.
@@ -251,7 +251,7 @@ but that does not make much difference.
 Okay, but I would never write functional code that way. When I'm "functional
 programming" I try to live in [a world without assignment][awwoa].
 
-To the extend that Rust allows, let's mimic what I might do in Haskell.
+To the extent that Rust allows, let's mimic what I might do in Haskell.
 
 (Since the test function receives a record and returns nothing, I will still
 need one assignment at the end of the call chain.)
