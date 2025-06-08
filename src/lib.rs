@@ -122,6 +122,8 @@ fn get_accumulated_record(record: Record) -> Record {
 //@
 //@ For these tests, I will do a `cargo rustc --release -- --emit asm`.
 //@
+//@ You may also find it helpful to use the excellent [Compiler Explorer](https://rust.godbolt.org/z/6Tsnf3KbP).<sup>[2][2]</sup>
+//@
 //@ To prevent the compiler from optimizing away nearly all the code, I have
 //@ created a 'lib' project instead of a 'bin' (something with a `main.rs`).
 //@
@@ -479,11 +481,16 @@ pub fn update_mut_record_mut(mut record: Record) -> Record {
 //@
 //@ ### Footnotes
 //@
-//@ [1]: #1
-//@ <footer id="1">
+//@ <footer>
 //@
-//@ <sup>1</sup>Technically, it may be _LLVM_ that enables this, but I think the Rust compiler
+//@ [1]: #1
+//@ <sup id="1">1</sup>Technically, it may be _LLVM_ that enables this, but I think the Rust compiler
 //@ team would have to do at least _some_ work to take advantage of it.
 //@
 //@ Also, when I say "zero cost," I mean "run-time performance cost." That is, writing in a functional style will not result in more memory usage or CPU cycles than writing in a more imperative, mutable style.
+//@
+//@ [2]: #2
+//@ <sup id="2">2</sup>I started with Compiler Explorer, but I wrote most of this on a flight, so I needed something I could run locally.
+//@
+//@ Code is available on GitHub at <https://github.com/jonwolski/records-in-rust/blob/main/src/lib.md>
 //@ </footer>
